@@ -42,8 +42,7 @@ public class CryptoService {
 
     private static PublicKey readPublicKey(File publickeyfile) throws IOException {
         InputStream in = new FileInputStream(publickeyfile);
-        ObjectInputStream oin =
-                new ObjectInputStream(new BufferedInputStream(in));
+        ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(in));
         try {
             BigInteger m = (BigInteger) oin.readObject();
             BigInteger e = (BigInteger) oin.readObject();
@@ -75,7 +74,6 @@ public class CryptoService {
     }
 
     public void savekeys (File privatekeyfile , File publickeyfile,KeyPair keyPair) throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
-
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         RSAPublicKeySpec pub = keyFactory.getKeySpec(keyPair.getPublic(), RSAPublicKeySpec.class);
         saveToFile(publickeyfile.getName(), pub.getModulus(), pub.getPublicExponent());
@@ -84,7 +82,7 @@ public class CryptoService {
     }
 
     private static void saveToFile(String fileName, BigInteger mod, BigInteger exp) throws IOException {
-        ObjectOutputStream oout = new ObjectOutputStream(   new BufferedOutputStream(new FileOutputStream(fileName)));
+        ObjectOutputStream oout = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)));
         try {
             oout.writeObject(mod);
             oout.writeObject(exp);
