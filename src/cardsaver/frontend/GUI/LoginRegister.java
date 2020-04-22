@@ -5,17 +5,16 @@ import cardsaver.frontend.FrontendManager;
 import javax.swing.*;
 import java.awt.*;
 
-public class LoginRegister extends JPanel {
+public class LoginRegister extends JFrame {
     FrontendManager frontendManager;
 
-    public LoginRegister(CardLayout cardLayout , FrontendManager frontendManager) {
-        super(cardLayout);
-        JLabel title;
+    public LoginRegister (FrontendManager frontendManager) {
+        this.setVisible(true);
+        setLocationRelativeTo(null);
         this.frontendManager = frontendManager;
-
-
+        JLabel state = new JLabel("");
+        add(state);
         //init comps
-
         JLabel firstLabel = new JLabel("First Name");
         JTextField firstTextfield = new JTextField();
         JLabel lastLabel = new JLabel("Last Name");
@@ -50,8 +49,18 @@ public class LoginRegister extends JPanel {
         loginpanel.add(usernameTextfield);
         loginpanel.add(passwordLabel);
         loginpanel.add(passwordTextfield);
+        loginpanel.setVisible(true);
+        registerpanel.setVisible(true);
 
-
+        JPanel content = new JPanel(new CardLayout());
+        content.add(registerpanel,"Register");
+        content.add(loginpanel,"Login");
+        loginpanel.show();
+        content.setVisible(true);
+        add(content);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        pack();
 
 
 

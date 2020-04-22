@@ -40,16 +40,6 @@ public class Account {
         this.salt = salt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Account)) return false;
-        Account account = (Account) o;
-        return getUsername().equals(account.getUsername()) &&
-                getEncryptedPassword().equals(account.getEncryptedPassword()) &&
-                getEmail().equals(account.getEmail()) &&
-                getSalt().equals(account.getSalt());
-    }
 
     @Override
     public int hashCode() {
