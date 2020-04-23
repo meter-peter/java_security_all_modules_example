@@ -21,7 +21,7 @@ public class Controller {
         fileManager = new FileManager();
         authService = new AuthService();
         cryptoService = new CryptoService();
-        frontendManager = new FrontendManager(this);
+        frontendManager = new FrontendManager(this,authService);
 
 
 
