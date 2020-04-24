@@ -1,18 +1,35 @@
 package cardsaver.auth;
 
-import java.security.MessageDigest;
+import cardsaver.Controller;
+import cardsaver.crypto.CryptoService;
+import cardsaver.storage.UsersManager;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Base64;
 
 public class AuthService {
+    Controller controller;
+    CryptoService cryptoService ;
     List<Account> accounts;
     Account currentaccount;
+    UsersManager usersManager;
 
-    public AuthService() {
+    public AuthService(Controller controller) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+        this.controller=controller;
         accounts= new ArrayList<>();
+        cryptoService = new CryptoService();
+        usersManager = new UsersManager();
     }
+
+
+    public Account authorizeApp(Account account){
+        return account;
+    }
+
 
     public AuthError createnewaccount(String username , String firstname , String lastname , String email , String password) {
         if (containsName(accounts, username)) {
@@ -39,13 +56,27 @@ public class AuthService {
         return bytes;
     }
 
-    public
+    public AuthError loginAccount(String username , String password) throws NoSuchAlgorithmException {
+        for (Account tobesearched : accounts) {
+            if (tobesearched.getUsername().equals(username)) {
+                if(Base64.getEncoder().encodeToString(tobesearched.getHashedpassword()).equals(Base64.getEncoder().encodeToString(cryptoService.generateSaltedHash(password,tobesearched.getSalt())))){
+                    System.out.println("SUCCESS");
+                }
 
-
-    public void register(String username , String firstname , String lastname , String email , String password){
+                break;
+            }else {
+                return AuthError.NOT_FOUND;
+            }
+        }
+        return null;
+    }
+    public void createAccount(String username , String firstname , String lastname , String email , String password) throws NoSuchAlgorithmException {
         if(!containsName(accounts,username)){
-            Account tobecreated = new Account(username , firstname ,lastname , email , password ,"ID",);
-            accounts.add()
+            byte[] salt = generateSalt();
+            Account tobecreated = new Account(username , firstname ,lastname , email ,cryptoService.generateSaltedHash(password,salt) ,"ID",salt);
+            accounts.add(tobecreated);
+            System.out.println(accounts.get(0).hashedpassword.toString());
+            usersManager.updateUsers(accounts);
         }
 
 

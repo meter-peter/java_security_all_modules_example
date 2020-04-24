@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginRegister extends JFrame {
     FrontendManager frontendManager;
@@ -29,27 +30,33 @@ public class LoginRegister extends JFrame {
         JLabel confirmLabel = new JLabel("Password Confirmation");
         JTextField confirmTextfield = new JTextField();
 
+        JLabel regusernameLabel = new JLabel("Username");
+        JTextField regusernameTextfield = new JTextField();
+        JLabel regpasswordLabel = new JLabel("Password");
+        JTextField regpasswordTextfield = new JTextField();
+
         //init register panel
-        JPanel registerpanel = new JPanel(new GridLayout(7,2));
+        JPanel registerpanel = new JPanel(new GridLayout(8,2));
         registerpanel.add(firstLabel);
         registerpanel.add(firstTextfield);
         registerpanel.add(lastLabel);
         registerpanel.add(lastTextfield);
         registerpanel.add(emailLabel);
         registerpanel.add(emailTextfield);
-        registerpanel.add(usernameLabel);
-        registerpanel.add(usernameTextfield);
-        registerpanel.add(passwordLabel);
-        registerpanel.add(passwordTextfield);
+        registerpanel.add(regusernameLabel);
+        registerpanel.add(regusernameTextfield);
+
         registerpanel.add(confirmLabel);
         registerpanel.add(confirmTextfield);
+        registerpanel.add(regpasswordLabel);
+        registerpanel.add(regpasswordTextfield);
         JButton submitregister = new JButton("Submit Register");
         JLabel changetologin = new JLabel("Or Click here to Log in");
         registerpanel.add(submitregister);
         registerpanel.add(changetologin);
 
         //init login panel
-        JPanel loginpanel = new JPanel(new GridLayout(2,4));
+        JPanel loginpanel = new JPanel(new GridLayout(4,2));
         loginpanel.add(usernameLabel);
         loginpanel.add(usernameTextfield);
         loginpanel.add(passwordLabel);
@@ -95,14 +102,30 @@ public class LoginRegister extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(passwordTextfield.equals(confirmTextfield)){
-                frontendManager.register(usernameTextfield.getText(),firstTextfield.getText(),lastTextfield.getText(),emailTextfield.getText(),passwordTextfield.getText());
+                if(regpasswordTextfield.getText().equals(confirmTextfield.getText())){
+                    try {
+                        frontendManager.register(regusernameTextfield.getText(),firstTextfield.getText(),lastTextfield.getText(),emailTextfield.getText(),regpasswordTextfield.getText());
+                    } catch (NoSuchAlgorithmException ex) {
+                        ex.printStackTrace();
+                    }
 
-            }
+                }
             else {
                 JOptionPane.showMessageDialog(content, "Passwords do not match");
 
             }}
+        });
+
+        loginbtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                try {
+                    frontendManager.login(usernameTextfield.getText(),passwordTextfield.getText());
+                } catch (NoSuchAlgorithmException ex) {
+                    ex.printStackTrace();
+                }
+            }
         });
     }
     public void onregister(){

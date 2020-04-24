@@ -3,6 +3,7 @@ package cardsaver.crypto;
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,8 +20,19 @@ public class CryptoService {
     public CryptoService() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         keypairGenerator = new KeypairGenerator();
         keyPair = keypairGenerator.getKeyPair();
-        System.out.println(keyPair.toString());
+
     }
+
+
+public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoSuchAlgorithmException {
+    MessageDigest md = MessageDigest.getInstance("SHA-512");
+    md.update(salt);
+    byte[] hashedPassword = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+    return hashedPassword;
+
+
+}
+
 
 
 }

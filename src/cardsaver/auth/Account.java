@@ -9,17 +9,17 @@ public class Account {
     String firstname;
     String lastname;
     byte[] salt;
-    String encryptedPassword;
+    byte[] hashedpassword;
     String email;
     String id;
 
 
-    public Account(String username, String firstname, String lastname , String email, String password , String id ,byte[] salt) {
+    public Account(String username, String firstname, String lastname , String email, byte[] hashedpassword , String id ,byte[] salt) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.salt = salt;
-        this.encryptedPassword = encryptedPassword;
+        this.hashedpassword = hashedpassword;
         this.email = email;
         this.id = id;
     }
@@ -40,5 +40,29 @@ public class Account {
                 return false;
             }
         };
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public byte[] getHashedpassword() {
+        return hashedpassword;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getId() {
+        return id;
     }
 }
