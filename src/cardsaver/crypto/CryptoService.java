@@ -1,15 +1,10 @@
 package cardsaver.crypto;
 
-import javax.crypto.SecretKey;
+import javax.crypto.Cipher;
 import java.io.*;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.*;
 import java.security.spec.*;
-import java.util.Base64;
 
 public class CryptoService {
 
@@ -23,6 +18,24 @@ public class CryptoService {
 
     }
 
+public KeyPair getKeyPair(){
+        return keyPair;
+}
+
+    public  byte[] encryptSaltedHash(byte[] Data) throws Exception {
+        Cipher c = Cipher.getInstance("RSA");
+        c.init(Cipher.ENCRYPT_MODE,getKeyPair().getPublic());
+        byte[] encVal = c.doFinal(Data);
+        return encVal;
+    }
+
+    public byte[] decryptPassword(byte[] encryptedData ) throws Exception {
+        Cipher c = Cipher.getInstance("RSA");
+        c.init(Cipher.DECRYPT_MODE, getKeyPair().getPrivate());
+
+        byte[] decValue = c.doFinal(encryptedData);
+        return decValue;
+    }
 
 public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoSuchAlgorithmException {
     MessageDigest md = MessageDigest.getInstance("SHA-512");

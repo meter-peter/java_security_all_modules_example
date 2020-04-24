@@ -22,11 +22,11 @@ public class FrontendManager {
 
     }
 
-    public void register(String username , String firstname , String lastname , String email , String password) throws NoSuchAlgorithmException {
+    public void register(String username , String firstname , String lastname , String email , String password) throws Exception {
         authService.createAccount(username, firstname, lastname, email, password);
         }
 
-        public void login(String username , String password) throws NoSuchAlgorithmException {
+        public void login(String username , String password) throws Exception {
         authService.loginAccount(username,password);
         }
 

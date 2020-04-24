@@ -107,6 +107,8 @@ public class LoginRegister extends JFrame {
                         frontendManager.register(regusernameTextfield.getText(),firstTextfield.getText(),lastTextfield.getText(),emailTextfield.getText(),regpasswordTextfield.getText());
                     } catch (NoSuchAlgorithmException ex) {
                         ex.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
 
                 }
@@ -123,6 +125,8 @@ public class LoginRegister extends JFrame {
                 try {
                     frontendManager.login(usernameTextfield.getText(),passwordTextfield.getText());
                 } catch (NoSuchAlgorithmException ex) {
+                    ex.printStackTrace();
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }

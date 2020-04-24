@@ -56,11 +56,18 @@ public class AuthService {
         return bytes;
     }
 
-    public AuthError loginAccount(String username , String password) throws NoSuchAlgorithmException {
+    public AuthError loginAccount(String username , String password) throws Exception {
         for (Account tobesearched : accounts) {
             if (tobesearched.getUsername().equals(username)) {
-                if(Base64.getEncoder().encodeToString(tobesearched.getHashedpassword()).equals(Base64.getEncoder().encodeToString(cryptoService.generateSaltedHash(password,tobesearched.getSalt())))){
+                byte[] decryptedHash = cryptoService.decryptPassword(tobesearched.getHashedpassword());
+                String base64decryptedhash = Base64.getEncoder().encodeToString(decryptedHash);
+
+
+                String userinputhashtobase64 = Base64.getEncoder().encodeToString(cryptoService.generateSaltedHash(password,tobesearched.getSalt()));
+
+                if(base64decryptedhash.equals(userinputhashtobase64)){
                     System.out.println("SUCCESS");
+                    return AuthError.SUCCESS;
                 }
 
                 break;
@@ -70,10 +77,22 @@ public class AuthService {
         }
         return null;
     }
-    public void createAccount(String username , String firstname , String lastname , String email , String password) throws NoSuchAlgorithmException {
+    public void createAccount(String username , String firstname , String lastname , String email , String password) throws Exception {
         if(!containsName(accounts,username)){
             byte[] salt = generateSalt();
-            Account tobecreated = new Account(username , firstname ,lastname , email ,cryptoService.generateSaltedHash(password,salt) ,"ID",salt);
+
+            byte[] saltedhash = cryptoService.generateSaltedHash(password,salt);
+
+            byte[] encryptedsaltedhash = cryptoService.encryptSaltedHash(saltedhash);
+
+            Account tobecreated = new Account(username ,
+                    firstname ,
+                    lastname ,
+                    email ,
+                    encryptedsaltedhash,
+                    "ID",
+                    salt);
+
             accounts.add(tobecreated);
             System.out.println(accounts.get(0).hashedpassword.toString());
             usersManager.updateUsers(accounts);
