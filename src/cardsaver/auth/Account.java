@@ -14,7 +14,7 @@ public class Account {
     String id;
 
 
-    public Account(String username, String firstname, String lastname , String email, String id ,byte[] salt) {
+    public Account(String username, String firstname, String lastname , String email, String password , String id ,byte[] salt) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;

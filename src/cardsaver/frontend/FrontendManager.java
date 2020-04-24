@@ -29,11 +29,5 @@ public class FrontendManager {
 
 
 
-    public void register(String username , String firstname , String lastname , String email , String password){
-        if(!containsName(AuthService))
-
-
-
-    }
 
 }
