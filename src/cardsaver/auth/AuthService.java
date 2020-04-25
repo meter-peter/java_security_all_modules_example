@@ -60,9 +60,8 @@ public class AuthService {
         for (Account tobesearched : accounts) {
             if (tobesearched.getUsername().equals(username)) {
                 byte[] decryptedHash = cryptoService.decryptPassword(tobesearched.getHashedpassword());
+
                 String base64decryptedhash = Base64.getEncoder().encodeToString(decryptedHash);
-
-
                 String userinputhashtobase64 = Base64.getEncoder().encodeToString(cryptoService.generateSaltedHash(password,tobesearched.getSalt()));
 
                 if(base64decryptedhash.equals(userinputhashtobase64)){

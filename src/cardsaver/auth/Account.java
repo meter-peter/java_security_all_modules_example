@@ -1,9 +1,5 @@
 package cardsaver.auth;
 
-import com.google.gson.*;
-
-import java.util.List;
-
 public class Account {
     String username;
     String firstname;
@@ -26,20 +22,6 @@ public class Account {
 
     public String getUsername() {
         return username;
-    }
-
-    public static ExclusionStrategy createStrategy(List<String> fields) {
-        return new ExclusionStrategy() {
-            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
-                if (fields.stream().anyMatch(e -> e.equals(fieldAttributes.getName()))) {
-                    return false;
-                }
-                return true;
-            }
-            public boolean shouldSkipClass(Class aClass) {
-                return false;
-            }
-        };
     }
 
     public String getFirstname() {
