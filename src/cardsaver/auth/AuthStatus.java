@@ -1,6 +1,6 @@
 package cardsaver.auth;
 
-public enum AuthError {
+public enum AuthStatus {
     SUCCESS(0,"SUCCESS"),
     NOT_FOUND(1, "User Not Found"),
     DUPLICATE_USER(5007, "This user already exists."),
@@ -10,7 +10,7 @@ public enum AuthError {
     private final int id;
     private final String message;
 
-    AuthError(int id, String message) {
+    AuthStatus(int id, String message) {
         this.id = id;
         this.message = message;
     }

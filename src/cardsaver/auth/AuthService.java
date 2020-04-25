@@ -16,14 +16,30 @@ public class AuthService {
     CryptoService cryptoService ;
     List<Account> accounts;
     Account currentaccount;
-    UsersManager usersManager;
 
     public AuthService(Controller controller) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         this.controller=controller;
-        accounts= new ArrayList<>();
+
         cryptoService = new CryptoService();
         usersManager = new UsersManager();
+
+        if(usersManager.getUsers()!=null)
+        accounts = usersManager.getUsers();
+        else {accounts = new ArrayList<>();}
+        System.out.println(accounts);
     }
+
+    public Account getCurrentaccount() {
+        return currentaccount;
+    }
+
+    public void setCurrentaccount(Account currentaccount) {
+        this.currentaccount = currentaccount;
+    }
+
+    UsersManager usersManager;
+
+
 
 
     public Account authorizeApp(Account account){
@@ -31,9 +47,9 @@ public class AuthService {
     }
 
 
-    public AuthError createnewaccount(String username , String firstname , String lastname , String email , String password) {
+    public AuthStatus createnewaccount(String username , String firstname , String lastname , String email , String password) {
         if (containsName(accounts, username)) {
-            return AuthError.DUPLICATE_USER;
+            return AuthStatus.DUPLICATE_USER;
         } else {
             return null;
 
@@ -45,8 +61,11 @@ public class AuthService {
         return accounts;
     }
 
-    private boolean containsName(List<Account> list,String name){
-        return list.stream().filter(o -> o.getUsername().equals(name)).findFirst().isPresent();
+    private boolean containsName(List<Account> list,String name) {
+        try {
+            return list.stream().filter(o -> o.getUsername().equals(name)).findFirst().isPresent();
+        } catch (NullPointerException e){}
+        return false;
     }
 
     public byte[] generateSalt() {
@@ -56,33 +75,36 @@ public class AuthService {
         return bytes;
     }
 
-    public AuthError loginAccount(String username , String password) throws Exception {
+    public AuthStatus loginAccount(String username , String password) throws Exception {
         for (Account tobesearched : accounts) {
             if (tobesearched.getUsername().equals(username)) {
-                byte[] decryptedHash = cryptoService.decryptPassword(tobesearched.getHashedpassword());
+                byte[] decryptedHash = cryptoService.decryptWithRSA(tobesearched.getHashedpassword());
 
                 String base64decryptedhash = Base64.getEncoder().encodeToString(decryptedHash);
                 String userinputhashtobase64 = Base64.getEncoder().encodeToString(cryptoService.generateSaltedHash(password,tobesearched.getSalt()));
 
                 if(base64decryptedhash.equals(userinputhashtobase64)){
                     System.out.println("SUCCESS");
-                    return AuthError.SUCCESS;
+                    currentaccount= tobesearched;
+                    return AuthStatus.SUCCESS;
+                }else{
+                    java.util.concurrent.TimeUnit.SECONDS.sleep(2); //timeout se periptwsh pou to exei lathos gia na kathysterhsoume se periptwsh bruteforce attack;
+                    return AuthStatus.WRONG_PASS;
                 }
 
-                break;
             }else {
-                return AuthError.NOT_FOUND;
+                return AuthStatus.NOT_FOUND;
             }
         }
         return null;
     }
-    public void createAccount(String username , String firstname , String lastname , String email , String password) throws Exception {
+    public AuthStatus createAccount(String username , String firstname , String lastname , String email , String password) throws Exception {
         if(!containsName(accounts,username)){
             byte[] salt = generateSalt();
 
             byte[] saltedhash = cryptoService.generateSaltedHash(password,salt);
 
-            byte[] encryptedsaltedhash = cryptoService.encryptSaltedHash(saltedhash);
+            byte[] encryptedsaltedhash = cryptoService.encryptWithRSA(saltedhash);
 
             Account tobecreated = new Account(username ,
                     firstname ,
@@ -91,12 +113,17 @@ public class AuthService {
                     encryptedsaltedhash,
                     "ID",
                     salt);
-
+            System.out.println(tobecreated.toString());
             accounts.add(tobecreated);
+
+            currentaccount = tobecreated;
             System.out.println(accounts.get(0).hashedpassword.toString());
             usersManager.updateUsers(accounts);
+            controller.continuewithinapp(tobecreated);
+            usersManager.saveAES(cryptoService.generateAES(),tobecreated);
+            return AuthStatus.SUCCESS;
         }
-
+        return AuthStatus.DUPLICATE_USER;
 
 
     }
