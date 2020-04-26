@@ -28,14 +28,17 @@ public class LoginRegister extends JFrame {
         JLabel usernameLabel = new JLabel("Username");
         JTextField usernameTextfield = new JTextField();
         JLabel passwordLabel = new JLabel("Password");
-        JTextField passwordTextfield = new JTextField();
-        JLabel confirmLabel = new JLabel("Password Confirmation");
-        JTextField confirmTextfield = new JTextField();
+        JPasswordField passwordTextfield = new JPasswordField();
+        passwordTextfield.setEchoChar('*');
 
+        JLabel confirmLabel = new JLabel("Password Confirmation");
+        JPasswordField confirmTextfield = new JPasswordField();
+        confirmTextfield.setEchoChar('*');
         JLabel regusernameLabel = new JLabel("Username");
         JTextField regusernameTextfield = new JTextField();
         JLabel regpasswordLabel = new JLabel("Password");
-        JTextField regpasswordTextfield = new JTextField();
+        JPasswordField regpasswordTextfield = new JPasswordField();
+        regpasswordTextfield.setEchoChar('*');
 
         //init register panel
         JPanel registerpanel = new JPanel(new GridLayout(8,2));

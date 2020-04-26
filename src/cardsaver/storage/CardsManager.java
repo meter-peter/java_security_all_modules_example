@@ -8,15 +8,13 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Reader;
+
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class CardsManager {
 
@@ -39,11 +37,12 @@ public class CardsManager {
 
 
 
-    public ArrayList<CreditCard> getCardsFromFile(Account account) throws Exception {
+    public ArrayList<CreditCard> getCardsFromFile(Account account) throws Exception { //αποκρυπτογράφηση του json αρχείου που περιέχει τις κάρτες και cast απο json σε Arraylist
         File file = new File("users//"+account.getUsername()+"//cards");
         if(!file.exists())
             file.createNewFile();
         byte[] bFile = Files.readAllBytes(Paths.get(file.getPath()));
+
         byte[] jsonbytes = cryptoService.decryptWithAES(bFile,usersManager.getAES(usersManager.getCurrent()));
         String jsonString = new String(jsonbytes, StandardCharsets.UTF_8);
 
@@ -54,7 +53,7 @@ public class CardsManager {
 
 
     }
-    public void updateFileCards(ArrayList<CreditCard> creditCards,Account account) throws Exception {
+    public void updateFileCards(ArrayList<CreditCard> creditCards,Account account) throws Exception { //μετατροπή απο Arraylist se json , κρυπτογράφηση και αποθηκευση
         Gson gson = new Gson();
         String json = gson.toJson(creditCards);
         File file = new File("users//"+account.getUsername()+"//cards");

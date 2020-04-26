@@ -39,7 +39,7 @@ public UsersManager(CryptoService cryptoService) throws IOException, InvalidKeyS
         this.current = current;
     }
 
-    public ArrayList<Account> getUsers(){
+    public ArrayList<Account> getUsers(){ //μετατροπή απο json αρχειο σε arraylist
         try {
             Reader reader = Files.newBufferedReader(Paths.get(users.getPath()));
 
@@ -52,7 +52,7 @@ public UsersManager(CryptoService cryptoService) throws IOException, InvalidKeyS
         return temp;
     }
 
-    public void updateUsers(List<Account> appusers){
+    public void updateUsers(List<Account> appusers){ //ανανέωση του αρχείου
         try {
             Writer writer = Files.newBufferedWriter(Paths.get(users.getPath()));
             Gson gson = new Gson();
@@ -67,7 +67,7 @@ public UsersManager(CryptoService cryptoService) throws IOException, InvalidKeyS
 
     }
 
-    public void saveAES(byte[] data ,Account account) throws Exception {
+    public void saveAES(byte[] data ,Account account) throws Exception { //αποθηκευση του AES κλειδιου του χρήστη σε αρχείο
         File key = new File("users//"+account.getUsername()+"//encryptedData.dat");
         if(!key.exists())
         key.createNewFile();
@@ -83,7 +83,7 @@ public UsersManager(CryptoService cryptoService) throws IOException, InvalidKeyS
 
     }
 
-    public byte[] getAES(Account account) throws Exception {
+    public byte[] getAES(Account account) throws Exception { //αποκρυπτογράφηση του κλειδίου με το private key της εφαρμογής
         File key = new File("users//"+account.getUsername()+"//encryptedData.dat");
         byte[] bFile = Files.readAllBytes(Paths.get(key.getPath()));
         byte[] aes = cryptoService.decryptWithRSA(bFile);

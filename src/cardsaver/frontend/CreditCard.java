@@ -1,6 +1,7 @@
 package cardsaver.frontend;
 
 
+import java.util.UUID;
 
 public class CreditCard {
     String Number;
@@ -8,6 +9,7 @@ public class CreditCard {
     String cvv;
     String type;
     String expirationDate;
+    String id;
 
     public String getExpirationDate() {
         return expirationDate;
@@ -55,6 +57,7 @@ public class CreditCard {
         this.cvv = cvv;
         this.type = type;
         this.expirationDate = expirationDate;
+        id = UUID.randomUUID().toString();
     }
 
     @Override
@@ -62,5 +65,13 @@ public class CreditCard {
         String newString =getType()+": *"+ getNumber().substring(getNumber().length()-3);
         return newString;
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

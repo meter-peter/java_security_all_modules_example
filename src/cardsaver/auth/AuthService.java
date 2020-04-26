@@ -32,36 +32,9 @@ public class AuthService {
     public Account getCurrentaccount() {
         return currentaccount;
     }
-
-    public void setCurrentaccount(Account currentaccount) {
-        this.currentaccount = currentaccount;
-    }
-
     UsersManager usersManager;
 
-
-
-
-    public Account authorizeApp(Account account){
-        return account;
-    }
-
-
-    public AuthStatus createnewaccount(String username , String firstname , String lastname , String email , String password) {
-        if (containsName(accounts, username)) {
-            return AuthStatus.DUPLICATE_USER;
-        } else {
-            return null;
-
-        }
-    }
-
-
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    private boolean containsName(List<Account> list,String name) {
+    private boolean containsName(List<Account> list,String name) { //ελεγχος για το αν υπαρχει εγγεγραμένος χρήστης
         try {
             return list.stream().filter(o -> o.getUsername().equals(name)).findFirst().isPresent();
         } catch (NullPointerException e){}
@@ -76,8 +49,9 @@ public class AuthService {
     }
 
     public AuthStatus loginAccount(String username , String password) throws Exception {
-        for (Account tobesearched : accounts) {
-            if (tobesearched.getUsername().equals(username)) {
+        boolean flag = false;
+        for (Account tobesearched : accounts) { //ελεγχουμε ολη τη λιστα με τους λογαριασμούς
+            if (tobesearched.getUsername().toLowerCase().equals(username.toLowerCase())) { //αν βρουμε το username συγκρίνουμε τα base64 των hashes
                 byte[] decryptedHash = cryptoService.decryptWithRSA(tobesearched.getHashedpassword());
 
                 String base64decryptedhash = Base64.getEncoder().encodeToString(decryptedHash);
@@ -86,21 +60,24 @@ public class AuthService {
                 if(base64decryptedhash.equals(userinputhashtobase64)){
                     System.out.println("SUCCESS");
                     currentaccount= tobesearched;
-                    controller.continuewithinapp(tobesearched);
+                    controller.continuewithlogin(tobesearched);
+
+                    flag=true;
                     return AuthStatus.SUCCESS;
                 }else{
                     java.util.concurrent.TimeUnit.SECONDS.sleep(2); //timeout se periptwsh pou to exei lathos gia na kathysterhsoume se periptwsh bruteforce attack;
                     return AuthStatus.WRONG_PASS;
                 }
 
-            }else {
-                return AuthStatus.NOT_FOUND;
             }
+
         }
-        return null;
+        if(flag=false)
+            return AuthStatus.NOT_FOUND;
+        else return null;
     }
     public AuthStatus createAccount(String username , String firstname , String lastname , String email , String password) throws Exception {
-        if(!containsName(accounts,username)){
+        if(!containsName(accounts,username)){ //αν δεν υπάρχει ο λογαριασμός μπορεί να δημιουργηθεί
             byte[] salt = generateSalt();
 
             byte[] saltedhash = cryptoService.generateSaltedHash(password,salt);
@@ -115,13 +92,16 @@ public class AuthService {
                     "ID",
                     salt);
             System.out.println(tobecreated.toString());
+
+            //αρχικοποιήσεις μετα γην εγγραφή
             accounts.add(tobecreated);
 
             currentaccount = tobecreated;
             System.out.println(accounts.get(0).hashedpassword.toString());
             usersManager.updateUsers(accounts);
-            controller.continuewithinapp(tobecreated);
+            controller.continuewithregister(tobecreated);
             usersManager.saveAES(cryptoService.generateAES(),tobecreated);
+            //controller.checkintegrity();
             return AuthStatus.SUCCESS;
         }
         return AuthStatus.DUPLICATE_USER;

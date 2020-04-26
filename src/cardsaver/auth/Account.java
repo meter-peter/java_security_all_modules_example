@@ -1,3 +1,5 @@
+//Κλασούλα για το account
+
 package cardsaver.auth;
 
 public class Account {
@@ -8,6 +10,7 @@ public class Account {
     byte[] hashedpassword;
     String email;
     String id;
+
 
 
     public Account(String username, String firstname, String lastname , String email, byte[] hashedpassword , String id ,byte[] salt) {

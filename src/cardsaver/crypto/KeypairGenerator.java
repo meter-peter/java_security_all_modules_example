@@ -34,9 +34,7 @@ public class KeypairGenerator {
             keyPair=new KeyPair(getPublicKey(),getPrivateKey());
         }
 
-        public void generate(){
 
-        }
 
     public KeyPair getKeyPair() {
         return keyPair;

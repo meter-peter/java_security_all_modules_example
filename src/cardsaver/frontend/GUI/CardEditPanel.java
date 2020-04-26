@@ -19,6 +19,7 @@ public class CardEditPanel {
    String datedata;
    String cvvdata;
    String typedata;
+   WalletGUI WalletGUI;
 
    public void setData(String owner , String number , String Date , String cvv){
        namefield.setText(owner);
@@ -35,7 +36,7 @@ public class CardEditPanel {
 
 
 
-   public CardEditPanel(FrontendManager frontendManager){
+   public CardEditPanel(FrontendManager frontendManager) throws Exception {
        this.frontendManager= frontendManager;
        JLabel name =new JLabel("Owner's Name");
        namefield = new JTextField();
@@ -45,6 +46,10 @@ public class CardEditPanel {
        datetextfield= new JTextField();
        JLabel cvv = new JLabel("CVV");
        cvvfielf = new JTextField();
+
+       types = new JComboBox<>();
+       types.addItem("VISA");
+       types.addItem("MASTERCARD");
 
 
        myPanel = new JPanel(new GridLayout(5,1));
@@ -56,22 +61,25 @@ public class CardEditPanel {
        myPanel.add(datetextfield);
        myPanel.add(cvv);
        myPanel.add(cvvfielf);
+       myPanel.add(types);
 
        int result = JOptionPane.showConfirmDialog(null, myPanel,
                "Add A new Card", JOptionPane.OK_CANCEL_OPTION);
        if (result == JOptionPane.OK_OPTION) {
+           frontendManager.addCard(numberfield.getText(),namefield.getText(),cvvfielf.getText(),types.getSelectedItem().toString(),datetextfield.getText());
 
        }
 
    }
 
-   public CardEditPanel(FrontendManager frontendManager,String ownerdata , String numberdata , String datedata , String cvvdata , String typedata) {
+   public CardEditPanel(WalletGUI WalletGUI ,FrontendManager frontendManager,String ownerdata , String numberdata , String datedata , String cvvdata , String typedata) throws Exception {
        this.ownerdata=ownerdata;
        this.numberdata=numberdata;
        this.datedata=datedata;
        this.cvvdata=cvvdata;
        this.frontendManager= frontendManager;
        this.typedata=typedata;
+       this.WalletGUI=WalletGUI;
        JLabel name =new JLabel("Owner's Name");
        namefield = new JTextField(ownerdata);
        JLabel number = new JLabel("Card's Number");
@@ -105,7 +113,7 @@ public class CardEditPanel {
        int result = JOptionPane.showConfirmDialog(null, myPanel,
                "Card Editor", JOptionPane.OK_CANCEL_OPTION);
        if (result == JOptionPane.OK_OPTION) {
-
+                frontendManager.edit(namefield.getText(),numberfield.getText(),datetextfield.getText(),cvvfielf.getText(),types.getSelectedItem().toString(),WalletGUI.selectedCard.getId());
        }
    }
 }

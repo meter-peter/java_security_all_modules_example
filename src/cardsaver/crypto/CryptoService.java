@@ -24,7 +24,7 @@ public KeyPair getKeyPair(){
         return keyPair;
 }
 
-    public  byte[] encryptWithRSA(byte[] Data) throws Exception {
+    public  byte[] encryptWithRSA(byte[] Data) throws Exception { //κρυπτογράφηση με το RSA  public key
         Cipher c = Cipher.getInstance("RSA");
         c.init(Cipher.ENCRYPT_MODE,getKeyPair().getPublic());
         byte[] encVal = c.doFinal(Data);
@@ -33,7 +33,7 @@ public KeyPair getKeyPair(){
 
     public byte[] decryptWithRSA(byte[] encryptedData ) throws Exception {
         Cipher c = Cipher.getInstance("RSA");
-        c.init(Cipher.DECRYPT_MODE, getKeyPair().getPrivate());
+        c.init(Cipher.DECRYPT_MODE, getKeyPair().getPrivate()); //αποκρυπτογράφηση με το RSA private key
 
         byte[] decValue = c.doFinal(encryptedData);
         return decValue;
@@ -47,7 +47,7 @@ public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoS
 }
 
 
-    public  byte[] encryptWithAES(byte[] Data ,byte[] key) throws Exception {
+    public  byte[] encryptWithAES(byte[] Data ,byte[] key) throws Exception { //AES κρυπτογράφηση με το key toυ χρήστη
         Key originalKey = new SecretKeySpec(key, 0, key.length, "AES");
         Cipher c = Cipher.getInstance("AES");
         c.init(Cipher.ENCRYPT_MODE,originalKey);
@@ -57,7 +57,7 @@ public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoS
 
 
     public byte[] decryptWithAES(byte[] encryptedData , byte[] key) throws Exception {
-        Key originalKey = new SecretKeySpec(key, 0, key.length, "AES");
+        Key originalKey = new SecretKeySpec(key, 0, key.length, "AES"); //AΕΣ αποκρυπτογράφηση με το key του χρήστη
         Cipher c = Cipher.getInstance("AES");
         c.init(Cipher.DECRYPT_MODE, originalKey);
 
@@ -67,7 +67,7 @@ public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoS
 
 
 
-    public byte[] generateAES() throws NoSuchAlgorithmException {
+    public byte[] generateAES() throws NoSuchAlgorithmException { //παραγωγή AES κλειδιου
         Key key;
         SecureRandom rand = new SecureRandom();
         KeyGenerator generator = KeyGenerator.getInstance("AES");
