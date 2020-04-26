@@ -2,6 +2,7 @@ package cardsaver.crypto;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -45,6 +46,27 @@ public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoS
     return hashedPassword;
 }
 
+
+    public  byte[] encryptWithAES(byte[] Data ,byte[] key) throws Exception {
+        Key originalKey = new SecretKeySpec(key, 0, key.length, "AES");
+        Cipher c = Cipher.getInstance("AES");
+        c.init(Cipher.ENCRYPT_MODE,originalKey);
+        byte[] encVal = c.doFinal(Data);
+        return encVal;
+    }
+
+
+    public byte[] decryptWithAES(byte[] encryptedData , byte[] key) throws Exception {
+        Key originalKey = new SecretKeySpec(key, 0, key.length, "AES");
+        Cipher c = Cipher.getInstance("AES");
+        c.init(Cipher.DECRYPT_MODE, originalKey);
+
+        byte[] decValue = c.doFinal(encryptedData);
+        return decValue;
+    }
+
+
+
     public byte[] generateAES() throws NoSuchAlgorithmException {
         Key key;
         SecureRandom rand = new SecureRandom();
@@ -53,6 +75,7 @@ public byte[] generateSaltedHash(String passwordToHash , byte[] salt) throws NoS
         key = generator.generateKey();
         return  key.getEncoded();
     }
+
 
 }
 

@@ -20,19 +20,23 @@ public class Controller {
     UsersManager usersManager;
 
 
-    public Controller() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-        cardsManager = new CardsManager();
-        authService = new AuthService(this);
+    public Controller() throws Exception {
         cryptoService = new CryptoService();
-        frontendManager = new FrontendManager(this,authService);
-        usersManager = new UsersManager();
+
+        usersManager = new UsersManager(cryptoService);
+        authService = new AuthService(this,usersManager);
+        cardsManager = new CardsManager(cryptoService,usersManager);
+        frontendManager = new FrontendManager(this,authService,cardsManager,cryptoService);
+
 
 
     }
 
  public void continuewithinapp(Account account){
         currentUser = account;
+        usersManager.setCurrent(account);
         usersManager.createUserDrectory(currentUser);
+        frontendManager.opengui();
 
 
 

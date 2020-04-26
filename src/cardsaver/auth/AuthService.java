@@ -17,11 +17,11 @@ public class AuthService {
     List<Account> accounts;
     Account currentaccount;
 
-    public AuthService(Controller controller) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+    public AuthService(Controller controller, UsersManager usersManager) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         this.controller=controller;
 
         cryptoService = new CryptoService();
-        usersManager = new UsersManager();
+        this.usersManager = usersManager;
 
         if(usersManager.getUsers()!=null)
         accounts = usersManager.getUsers();
@@ -86,6 +86,7 @@ public class AuthService {
                 if(base64decryptedhash.equals(userinputhashtobase64)){
                     System.out.println("SUCCESS");
                     currentaccount= tobesearched;
+                    controller.continuewithinapp(tobesearched);
                     return AuthStatus.SUCCESS;
                 }else{
                     java.util.concurrent.TimeUnit.SECONDS.sleep(2); //timeout se periptwsh pou to exei lathos gia na kathysterhsoume se periptwsh bruteforce attack;

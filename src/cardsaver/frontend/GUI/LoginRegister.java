@@ -1,6 +1,7 @@
 package cardsaver.frontend.GUI;
 
 import cardsaver.auth.AuthStatus;
+import cardsaver.frontend.CreditCard;
 import cardsaver.frontend.FrontendManager;
 
 import javax.swing.*;
@@ -80,6 +81,8 @@ public class LoginRegister extends JFrame {
         cl.show(content, "Register");
         pack();
 
+
+
         changetologin.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -106,6 +109,8 @@ public class LoginRegister extends JFrame {
                 if(regpasswordTextfield.getText().equals(confirmTextfield.getText())){
                     try {
                         frontendManager.register(regusernameTextfield.getText(),firstTextfield.getText(),lastTextfield.getText(),emailTextfield.getText(),regpasswordTextfield.getText());
+                    } catch (NoSuchAlgorithmException ex) {
+                        ex.printStackTrace();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
